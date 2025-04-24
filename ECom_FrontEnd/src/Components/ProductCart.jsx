@@ -52,11 +52,11 @@ const ProductCart = ({ product }) => {
           <p className="md:text-xl text-base font-medium text-indigo-500">
             {currency} ${product.offerPrice} <span className="text-gray-500/60 md:text-sm text-xs line-through">${product.price}</span>
           </p>
-          <div className="text-indigo-500">
+          <div onClick={(e)=> {stopPropagation()}} className="text-indigo-500">
             {!cartItems[product._id] ? (
               <button 
-                className="flex items-center justify-center gap-1 bg-indigo-100 border border-indigo-300 md:w-20 w-16 h-8 rounded text-indigo-600 font-medium" 
-                onClick={() => setCount(1)}
+                className="flex items-center justify-center gap-1 bg-primary border border-primary-300 md:w-20 w-16 h-8 rounded text-indigo-600 font-medium cursor-pointer" 
+                onClick={() => addToCart(product._id)}
               >
                 <img src={assets.cart_icon} alt="cart" />
                 Add
@@ -64,14 +64,14 @@ const ProductCart = ({ product }) => {
             ) : (
               <div className="flex items-center justify-center gap-2 md:w-20 w-16 h-8 bg-indigo-500/25 rounded select-none">
                 <button 
-                  onClick={() => setCount((prev) => Math.max(prev - 1, 0))} 
+                  onClick={() => {removeFromCart(product._id)}} 
                   className="cursor-pointer text-md px-2 h-full"
                 >
                   -
                 </button>
                 <span className="w-5 text-center">{cartItems[product._id]}</span>
                 <button 
-                  onClick={() => setCount((prev) => prev + 1)} 
+                  onClick={() => addToCart(product._id)} 
                   className="cursor-pointer text-md px-2 h-full"
                 >
                   +
