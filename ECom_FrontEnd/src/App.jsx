@@ -8,6 +8,7 @@
   import { useAppContext } from './Context/Context';
   import Login from './Components/Login';
   import ProductCategory from './Pages/ProductCategory';
+import ProductDetails from './Pages/ProductDetails';
 
   const App = () => {
     const location = useLocation();
@@ -26,6 +27,7 @@
             <Route path='/' element={<Home />} />
             <Route path='/products' element={<AllProduct />} />
             <Route path='/products/:category' element={<ProductCategory />} />
+            <Route path='/products/:category/:id' element={<ProductDetails />} />
           </Routes>
         </div>
         
