@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import React from 'react'
-
+import { useAppContext } from "../Context/Context";
+import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
 
-    
+    const {products,navigate,currency,addToCart}=useAppContext()
+    const {id}=useParams()
+    const [relatedProducts, setRelatedProducts] = useState(product.images[0]);
+    const [thumbnail, setThumbnail] = useState(null);
+    const product=products.find((item)=>item._id);
+    useEffect(()=>{
 
-    const [thumbnail, setThumbnail] =useState(product.images[0]);
+        if(products.length>0){
+            let productsCopty=products.slice();
+            productsCopty=productsCopty.filter((item=>product.category===item.category))
+            setRelatedProducts(productsCopty.slice(0,5))
+        }
+
+    },[products])
+
+    use
 
     return product && (
         <div className="max-w-6xl w-full px-6">
