@@ -37,6 +37,7 @@ const Navbar = () => {
           <img src={assets.search_icon} className="w-4 h-4" alt="Search Icon" />
         </div>
 
+
         <div onClick={() => navigate('/cart')} className="relative cursor-pointer">
           <img src={assets.nav_cart_icon} className="w-6 opacity-80" alt="" />
           <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">{getCartCount()}</button>
@@ -57,13 +58,20 @@ const Navbar = () => {
         )}
       </div>
 
-      <button onClick={() => setOpen(!open)} aria-label="Menu" className="sm:hidden">
+        <div className='flex items-center gap-6 sm:hidden'>
+        <button onClick={() => setOpen(!open)} aria-label="Menu" className="sm:hidden">
+        <img src={assets.nav_cart_icon} alt="Menu Icon" />
+      </button>
+        <button onClick={() => setOpen(!open)} aria-label="Menu" className="">
         <img src={assets.menu_icon} alt="Menu Icon" />
       </button>
 
+        </div>
+      
+
       {/* Mobile Menu */}
       {open && (
-        <div className="absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex flex-col items-start gap-2 px-5 text-sm md:hidden">
+        <div className="absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex flex-col items-start gap-2 px-5 text-sm md:hidden z-1">
           <NavLink to='/' onClick={() => setOpen(false)}>Home</NavLink>
           <NavLink to='/products' onClick={() => setOpen(false)}>All Products</NavLink>
           {user && <NavLink to='/my-orders' onClick={() => setOpen(false)}>My Orders</NavLink>}
