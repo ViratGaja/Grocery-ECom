@@ -12,32 +12,32 @@ const ProductCart = ({ product }) => {
     navigate,
   } = useAppContext();
 
-  // Initialize count based on cartItems or default to 0
   const [count, setCount] = useState(cartItems[product?._id] || 0);
 
-  // Update cart when count changes
   useEffect(() => {
     if (product && count > 0) {
       updateCartItem(product._id, count);
     } else if (product && count === 0 && cartItems[product._id]) {
       removeFromCart(product._id);
     }
-  }, [count]);
+  }, [count, product, updateCartItem, removeFromCart, cartItems]);
 
   if (!product) return null;
+
+  const isProductInCart = !!cartItems[product._id];
 
   return (
     <div
       onClick={() => {
-        navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
-        scrollTo(0, 0);
+        navigate(`/products/${product.category?.toLowerCase() || "unknown"}/${product._id}`);
+        window.scrollTo(0, 0);
       }}
       className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full"
     >
       <div className="group cursor-pointer flex items-center justify-center px-2">
         <img
           className="group-hover:scale-105 transition max-w-26 md:max-w-36"
-          src={product.image[0]}
+          src={product.image?.[0] || assets.placeholder_image}
           alt={product.name}
         />
       </div>
@@ -72,7 +72,7 @@ const ProductCart = ({ product }) => {
             }}
             className="text-indigo-500"
           >
-            {!cartItems[product._id] ? (
+            {!isProductInCart ? (
               <button
                 className="flex items-center justify-center gap-1 bg-primary border border-primary-300 md:w-20 w-16 h-8 rounded text-indigo-600 font-medium cursor-pointer"
                 onClick={() => {
