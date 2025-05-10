@@ -2,43 +2,77 @@ import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../Context/Context";
 
-const ProductCart = ({ product }) => {
+// Renamed from ProductCart to ProductCard to better reflect its purpose
+const ProductCard = ({ product }) => {
   const {
     currency,
     removeFromCart,
     addToCart,
-    updateCartItem,
     cartItems,
     navigate,
   } = useAppContext();
 
-  const [count, setCount] = useState(cartItems[product?._id] || 0);
+  // Check if product exists before accessing its properties
+  const productId = product?._id;
+  const initialCount = productId && cartItems[productId] ? cartItems[productId] : 0;
+  const [count, setCount] = useState(initialCount);
 
   useEffect(() => {
-    if (product && count > 0) {
-      updateCartItem(product._id, count);
-    } else if (product && count === 0 && cartItems[product._id]) {
-      removeFromCart(product._id);
+    // Sync local state with context cart items when they change
+    if (product && productId) {
+      const newCount = cartItems[productId] || 0;
+      if (count !== newCount) {
+        setCount(newCount);
+      }
     }
-  }, [count, product, updateCartItem, removeFromCart, cartItems]);
+  }, [cartItems, productId, product]);
 
   if (!product) return null;
 
-  const isProductInCart = !!cartItems[product._id];
+  const isProductInCart = !!cartItems[productId];
+  const productCategory = product.category?.toLowerCase() || "unknown";
+  const productImage = product.image?.[0] || assets.placeholder_image;
+  
+  const handleProductClick = () => {
+    navigate(`/products/${productCategory}/${productId}`);
+    window.scrollTo(0, 0);
+  };
+
+  const handleCartAction = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    // Just use context's addToCart - it will handle state updates and toast
+    addToCart(productId);
+  };
+
+  const handleDecrement = (e) => {
+    e.stopPropagation();
+    // Use removeFromCart directly - it handles state updates and toast
+    removeFromCart(productId);
+  };
+
+  const handleIncrement = (e) => {
+    e.stopPropagation();
+    // Use addToCart for increments too - consistent with context approach
+    addToCart(productId);
+  };
 
   return (
     <div
-      onClick={() => {
-        navigate(`/products/${product.category?.toLowerCase() || "unknown"}/${product._id}`);
-        window.scrollTo(0, 0);
-      }}
+      onClick={handleProductClick}
       className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full"
     >
       <div className="group cursor-pointer flex items-center justify-center px-2">
         <img
           className="group-hover:scale-105 transition max-w-26 md:max-w-36"
-          src={product.image?.[0] || assets.placeholder_image}
+          src={productImage}
           alt={product.name}
+          onError={(e) => {
+            e.target.src = assets.placeholder_image;
+          }}
         />
       </div>
       <div className="text-gray-500/60 text-sm">
@@ -67,18 +101,13 @@ const ProductCart = ({ product }) => {
             </span>
           </p>
           <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
+            onClick={handleCartAction}
             className="text-indigo-500"
           >
             {!isProductInCart ? (
               <button
                 className="flex items-center justify-center gap-1 bg-primary border border-primary-300 md:w-20 w-16 h-8 rounded text-indigo-600 font-medium cursor-pointer"
-                onClick={() => {
-                  setCount(1);
-                  addToCart(product._id);
-                }}
+                onClick={handleAddToCart}
               >
                 <img src={assets.cart_icon} alt="cart" />
                 Add
@@ -86,14 +115,14 @@ const ProductCart = ({ product }) => {
             ) : (
               <div className="flex items-center justify-center gap-2 md:w-20 w-16 h-8 bg-indigo-500/25 rounded select-none">
                 <button
-                  onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
+                  onClick={handleDecrement}
                   className="cursor-pointer text-md px-2 h-full"
                 >
                   -
                 </button>
                 <span className="w-5 text-center">{count}</span>
                 <button
-                  onClick={() => setCount((prev) => prev + 1)}
+                  onClick={handleIncrement}
                   className="cursor-pointer text-md px-2 h-full"
                 >
                   +
@@ -107,4 +136,4 @@ const ProductCart = ({ product }) => {
   );
 };
 
-export default ProductCart;
+export default ProductCard;
