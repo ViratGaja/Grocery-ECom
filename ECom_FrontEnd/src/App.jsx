@@ -9,6 +9,7 @@
   import Login from './Components/Login';
   import ProductCategory from './Pages/ProductCategory';
 import ProductDetails from './Pages/ProductDetails';
+import Cart from './Pages/Cart';
 
   const App = () => {
     const location = useLocation();
@@ -28,6 +29,7 @@ import ProductDetails from './Pages/ProductDetails';
             <Route path='/products' element={<AllProduct />} />
             <Route path='/products/:category' element={<ProductCategory />} />
             <Route path='/products/:category/:id' element={<ProductDetails />} />
+            <Route path='/cart' element={<Cart />} />
           </Routes>
         </div>
         
