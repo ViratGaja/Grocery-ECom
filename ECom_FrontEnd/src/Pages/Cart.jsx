@@ -105,7 +105,7 @@ const Cart = () => {
                             onClick={() => removeFromCart(product._id)} 
                             className="cursor-pointer mx-auto"
                         >
-                            <img src={assets.refresh_icon} alt="Remove" />
+                            <img src={assets.remove_icon} alt="Remove" />
                         </button>
                     </div>
                 ))}
